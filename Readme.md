@@ -134,6 +134,8 @@ This enabled correlation between **file integrity events and originating process
 
 > 📸 **Screenshot Placeholder – Activity Simulation Commands**
 > `screenshots/activity-simulation-commands.png`
+![Lab Architecture](images/Screenshot%202025-12-15%20101829.png)
+![Lab Architecture](images/Screenshot%202025-12-15%20113742.png)
 >
 > *(Include terminal screenshots showing PowerShell and Bash commands used to generate file and process activity)*
 
@@ -163,6 +165,9 @@ Sysmon captured the **process responsible**, while FIM captured the **file chang
 
 > 📸 **Screenshot Placeholder – Wazuh Alerts View**
 > `screenshots/wazuh-alerts-view.png`
+![Lab Architecture](images/img/Screenshot%202025-12-13%20145427.png)
+![Lab Architecture](images/img/Screenshot%202025-12-13%20145533.png)
+![Lab Architecture](images/img/Screenshot%202025-12-13%20150550.png)
 >
 > *(Include Wazuh dashboard alerts showing correlated FIM and Sysmon events)*
 
