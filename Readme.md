@@ -3,7 +3,7 @@
 
 # Enterprise File Integrity Monitoring (FIM) & Malware/Insider Threat Detection using Wazuh
 
-## 📌 Project Overview
+## Project Overview
 
 This project demonstrates the design, deployment, and validation of an **enterprise-grade File Integrity Monitoring (FIM)** and **endpoint behavioral visibility solution** using **Wazuh** and **Sysmon**. The solution focuses on detecting **insider threat activity**, **unauthorized system changes**, and **malware behavior** (e.g., DeerStealer) on **Windows endpoints** in a SOC environment.
 
@@ -11,7 +11,7 @@ The project emphasizes **telemetry correlation, behavioral analysis, and alert f
 
 ---
 
-## 🎯 Objectives
+## Objectives
 
 * Detect unauthorized file creation, modification, and deletion
 * Monitor high-risk directories associated with insider misuse or malware staging
@@ -22,7 +22,7 @@ The project emphasizes **telemetry correlation, behavioral analysis, and alert f
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 **Windows Endpoints**
 |
@@ -52,7 +52,7 @@ Alerts & Dashboards
 
 ---
 
-## 🔧 Implementation Steps
+## Implementation Steps
 
 ### 1️⃣ Agent & Telemetry Deployment
 
@@ -291,7 +291,7 @@ New-Item "$env:APPDATA\wallets.db"
 
 ---
 
-### 📊 Results & Impact
+### Results & Impact
 
 * Near real-time detection (<2 seconds)
 * Full **process + file context** for investigations
@@ -307,7 +307,7 @@ New-Item "$env:APPDATA\wallets.db"
 
 ---
 
-### 🧪 Lessons Learned
+### Lessons Learned
 
 * FIM alone lacks sufficient context without process telemetry
 * Sysmon significantly improves investigation depth
@@ -317,7 +317,7 @@ New-Item "$env:APPDATA\wallets.db"
 
 ---
 
-### 📎 CV Summary
+### CV Summary
 
 **Project:** Enterprise File Integrity Monitoring & Malware Detection using Wazuh
 **Description:** Designed and deployed a SOC-ready **FIM and Sysmon-based endpoint monitoring solution**, integrating **custom detection and correlation rules for insider threats and DeerStealer malware** across Windows systems. Delivered **high-confidence alerts**, MITRE ATT&CK mapped telemetry, and actionable insights for SOC operations.
