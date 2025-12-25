@@ -1,5 +1,5 @@
 
-# Behavioral Detection Engineering Framework for Endpoint Abuse
+# Wazuh Behavioral Detection for Endpoint Abuse
 
 Wazuh, Sysmon, MITRE ATT&CK–Aligned Correlation
 
