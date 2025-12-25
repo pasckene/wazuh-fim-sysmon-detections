@@ -5,7 +5,7 @@ Wazuh, Sysmon, MITRE ATT&CK–Aligned Correlation
 
 ---
 
-## Detection Engineer Portfolio Statement
+## Executive Summary
 
 This repository demonstrates **detection engineering capability**, not tool familiarity.
 
@@ -19,6 +19,9 @@ All detections are:
 * Tuned for alert fidelity and SOC scalability
 
 The work reflects **Tier-3 SOC / Detection Engineer thinking**, emphasizing signal quality, correlation logic, and investigation readiness.
+
+**Proof of Concept Screenshot Placeholder**
+`screenshots/executive-summary.png`
 
 ---
 
@@ -67,7 +70,7 @@ The goal is not to generate alerts, but to generate **decisions**.
 * Wazuh Manager for rule execution and correlation
 * MITRE ATT&CK for technique classification
 
-Architecture Diagram Placeholder
+**Architecture Diagram Placeholder**
 `screenshots/architecture-diagram.png`
 
 ---
@@ -79,6 +82,8 @@ Architecture Diagram Placeholder
 Sysmon is deployed using a hardened configuration to capture:
 
 * Event ID 1 – Process creation
+* Event ID 3 – Network connections
+* Event ID 7 – Image loaded
 * Event ID 11 – File creation
 * Event ID 13 – Registry modification
 
@@ -89,16 +94,16 @@ All events are forwarded using the `eventchannel` format to preserve structured 
 * User context
 * Target file paths
 
-Engineering Value:
-This enables deterministic correlation and reliable attribution during investigations.
+**Engineering Value:** This enables deterministic correlation and reliable attribution during investigations.
+
+**Screenshot Placeholder: Sysmon Event Sample**
+`screenshots/sysmon-events.png`
 
 ---
 
 ## File Integrity Monitoring Strategy
 
 ### Canary and High-Risk Directory Model
-
-Instead of broad filesystem monitoring, which produces excessive noise, this framework uses **intentional high-signal directories**.
 
 ```xml
 <syscheck>
@@ -113,11 +118,14 @@ Instead of broad filesystem monitoring, which produces excessive noise, this fra
 </syscheck>
 ```
 
-Detection Rationale:
+**Detection Rationale:**
 
 * Legitimate users have no business modifying bait directories
 * Any access represents elevated risk
 * Signal-to-noise ratio is maximized by design
+
+**Screenshot Placeholder: FIM Alert Example**
+`screenshots/fim-alert.png`
 
 ---
 
@@ -141,11 +149,14 @@ MITRE ATT&CK: T1059.001 – PowerShell
 </rule>
 ```
 
-Engineering Notes:
+**Engineering Notes:**
 
 * Detects legitimate administrative activity
 * Enables misuse detection through correlation
 * Avoids binary allow/deny logic
+
+**Screenshot Placeholder: PowerShell Detection Example**
+`screenshots/powershell-detection.png`
 
 ---
 
@@ -167,11 +178,14 @@ MITRE ATT&CK: T1083 – File and Directory Discovery
 </rule>
 ```
 
-Engineering Notes:
+**Engineering Notes:**
 
 * High confidence by design
 * Minimal tuning required
 * Suitable for automated response workflows
+
+**Screenshot Placeholder: Canary Directory Alert Example**
+`screenshots/canary-alert.png`
 
 ---
 
@@ -196,11 +210,14 @@ MITRE ATT&CK: T1074 – Data Staged
 </rule>
 ```
 
-Correlation Rationale:
+**Correlation Rationale:**
 
 * Single file events are often benign
 * Burst behavior indicates intent
 * Aligns with insider misuse patterns
+
+**Screenshot Placeholder: Correlated Alert Timeline**
+`screenshots/correlation-timeline.png`
 
 ---
 
@@ -208,42 +225,127 @@ Correlation Rationale:
 
 Rather than alerting on every event, the framework supports **risk-based escalation**.
 
-Concept:
+**Concept:**
 
 * Low-severity detections increment risk
 * Correlated behavior triggers escalation
 
 This mirrors UEBA and EDR logic used in mature SOCs.
 
+**Screenshot Placeholder: Risk Accumulation Dashboard**
+`screenshots/risk-dashboard.png`
+
 ---
 
-## Activity Simulation and Validation
+## Sysmon Behavioral Detection & Simulation
 
-All validation uses **legitimate administrative tools** only.
+### Sysmon Event Coverage
 
-### Bulk File Creation
+| Event ID | Purpose               | Example Use Case                                         |
+| -------- | --------------------- | -------------------------------------------------------- |
+| 1        | Process creation      | Detect execution of administrative tools or malware      |
+| 3        | Network connection    | Detect unusual external communications                   |
+| 7        | Image loaded          | Detect code injection or suspicious DLL loads            |
+| 11       | File creation         | Detect suspicious file creation in high-risk directories |
+| 13       | Registry modification | Detect persistence attempts or lateral movement setup    |
+
+---
+
+### Sysmon Detection Rules
+
+#### Notepad Execution
+
+MITRE ATT&CK: T1059.001 (Behavioral Process Detection)
+
+```xml
+<rule id="300100" level="10">
+  <if_sid>1</if_sid>
+  <field name="win.eventdata.Image" type="pcre2">
+    (?i)notepad.exe
+  </field>
+  <description>
+    Behavioral Detection: Notepad Execution via Sysmon.
+    Analyst Review: Verify process lineage and intent.
+  </description>
+  <mitre><id>T1059.001</id></mitre>
+</rule>
+```
+
+#### File Creation in Canary Directory
 
 MITRE ATT&CK: T1074
 
+```xml
+<rule id="300101" level="9">
+  <if_sid>11</if_sid>
+  <field name="win.eventdata.TargetFilename" type="pcre2">
+    (?i)C:\\Users\\Public\\Documents\\Bait
+  </field>
+  <description>
+    Behavioral Detection: File created in high-risk directory.
+    Analyst Review: Validate source process and user.
+  </description>
+  <mitre><id>T1074</id></mitre>
+</rule>
+```
+
+#### Registry Modification for Persistence
+
+MITRE ATT&CK: T1547
+
+```xml
+<rule id="300102" level="10">
+  <if_sid>13</if_sid>
+  <field name="win.eventdata.TargetObject" type="pcre2">
+    (?i)Software\\Microsoft\\Windows\\CurrentVersion\\Run
+  </field>
+  <description>
+    Behavioral Detection: Suspicious autostart registry modification.
+    Analyst Review: Confirm legitimacy of changes.
+  </description>
+  <mitre><id>T1547</id></mitre>
+</rule>
+```
+
+---
+
+### Sysmon Activity Simulation
+
+**1. Process Execution Simulation (Notepad)**
+
 ```powershell
-1..10 | ForEach-Object {
-  New-Item "C:\Users\Public\Documents\Bait\file$_.txt" -Value "InternalData"
+Start-Process notepad.exe
+```
+
+*Triggers Sysmon Event ID 1 (Process Creation) and Event ID 7 (Image Loaded)*
+
+**2. File Creation Simulation**
+
+```powershell
+1..5 | ForEach-Object {
+    New-Item "C:\Users\Public\Documents\Bait\sysmon_test$_.txt" -Value "TelemetryTest"
 }
 ```
 
-### File Enumeration
+*Triggers Sysmon Event ID 11 (File Creation)*
 
-MITRE ATT&CK: T1083
+**3. Registry Modification Simulation**
 
 ```powershell
-Get-ChildItem C:\Users\Public\Documents\Bait
+New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" `
+                 -Name "SysmonTest" -Value "C:\Windows\System32\notepad.exe" -PropertyType String
 ```
 
-Validation Outcome:
+*Triggers Sysmon Event ID 13 (Registry Modification)*
 
-* All detections triggered as designed
-* Correlation rules escalated appropriately
-* No false positives observed during normal usage
+**Validation Outcome:**
+
+* Sysmon events triggered as expected for all simulated activities
+* Correlation rules elevated risk for bulk actions appropriately
+* No false positives during normal usage
+
+**Screenshot Placeholder: Sysmon Event Viewer / Notepad Detection**
+`screenshots/sysmon-detection-notepad.png`
 
 ---
 
@@ -257,8 +359,6 @@ Validation Outcome:
 | T1047     | Planned     | Sysmon         |
 | T1053     | Planned     | Task Scheduler |
 
-This matrix is maintained to track detection gaps and roadmap priorities.
-
 ---
 
 ## SOC Triage Workflow
@@ -269,7 +369,8 @@ This matrix is maintained to track detection gaps and roadmap priorities.
 4. File activity timeline reconstructed
 5. Determination made: misuse, error, or benign
 
-This structure reduces mean time to decision and analyst fatigue.
+**Screenshot Placeholder: SOC Triage Flow**
+`screenshots/soc-triage.png`
 
 ---
 
@@ -280,13 +381,12 @@ This structure reduces mean time to decision and analyst fatigue.
 * Alert quality: High confidence, low noise
 * Investigation readiness: Full attribution available
 
-Dashboard Screenshot Placeholder
+**Dashboard Screenshot Placeholder**
 `screenshots/wazuh-dashboard.png`
 
 ---
 
 ## Skills Demonstrated
-<<<<<<< HEAD
 
 | Domain                | Capability                             |
 | --------------------- | -------------------------------------- |
@@ -303,41 +403,3 @@ Dashboard Screenshot Placeholder
 Designed and engineered a Tier-3 behavioral detection framework using Wazuh and Sysmon, focused on insider threat identification, administrative tool abuse, and suspicious file system activity. Built MITRE ATT&CK–aligned detection and correlation rules emphasizing alert fidelity, risk accumulation, and investigation readiness. Demonstrated advanced detection engineering, SOC triage workflows, and telemetry optimization without reliance on malware indicators.
 
 ---
-
-=======
-
-| Domain                | Capability                             |
-| --------------------- | -------------------------------------- |
-| Detection Engineering | Behavioral rule design and correlation |
-| Endpoint Security     | Sysmon and FIM instrumentation         |
-| Threat Hunting        | MITRE ATT&CK alignment                 |
-| SOC Operations        | Tier-2 and Tier-3 escalation logic     |
-| Investigation         | Process, user, and file attribution    |
-
----
-
-## CV-Ready Summary
-
-Designed and engineered a Tier-3 behavioral detection framework using Wazuh and Sysmon, focused on insider threat identification, administrative tool abuse, and suspicious file system activity. Built MITRE ATT&CK–aligned detection and correlation rules emphasizing alert fidelity, risk accumulation, and investigation readiness. Demonstrated advanced detection engineering, SOC triage workflows, and telemetry optimization without reliance on malware indicators.
-
----
-
-## Roadmap
-
-* User-centric correlation logic
-* Risk-based scoring per host and account
-* Active response integration
-* Sigma rule equivalents
-* Splunk SPL parity
-
----
-
-If you want next, I can:
-
-* Convert this into a **Detection Engineer interview walkthrough**
-* Add **Sigma + Splunk SPL equivalents**
-* Build a **unified Tier-3 SOC GitHub portfolio**
-* Rank your projects for recruiter scanning behavior
-
-Just tell me what to do next.
->>>>>>> b000b3e469a7043cbe2f515291428ebb47ea7a5a
