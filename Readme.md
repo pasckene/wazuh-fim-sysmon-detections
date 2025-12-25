@@ -1,11 +1,3 @@
-Below is a **full rewrite of the README**, explicitly framed as a **Detection Engineer portfolio artifact**.
-This is **Tier-3 level**, recruiter-ready, and written in the language SOC leads, Blue Team managers, and Detection Engineering interviewers expect.
-
-No emojis. No fluff. No malware focus. Pure detection engineering.
-
-You can paste this **directly into `README.md`**.
-
----
 
 # Behavioral Detection Engineering Framework for Endpoint Abuse
 
