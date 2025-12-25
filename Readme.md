@@ -286,6 +286,7 @@ Dashboard Screenshot Placeholder
 ---
 
 ## Skills Demonstrated
+<<<<<<< HEAD
 
 | Domain                | Capability                             |
 | --------------------- | -------------------------------------- |
@@ -303,3 +304,40 @@ Designed and engineered a Tier-3 behavioral detection framework using Wazuh and 
 
 ---
 
+=======
+
+| Domain                | Capability                             |
+| --------------------- | -------------------------------------- |
+| Detection Engineering | Behavioral rule design and correlation |
+| Endpoint Security     | Sysmon and FIM instrumentation         |
+| Threat Hunting        | MITRE ATT&CK alignment                 |
+| SOC Operations        | Tier-2 and Tier-3 escalation logic     |
+| Investigation         | Process, user, and file attribution    |
+
+---
+
+## CV-Ready Summary
+
+Designed and engineered a Tier-3 behavioral detection framework using Wazuh and Sysmon, focused on insider threat identification, administrative tool abuse, and suspicious file system activity. Built MITRE ATT&CK–aligned detection and correlation rules emphasizing alert fidelity, risk accumulation, and investigation readiness. Demonstrated advanced detection engineering, SOC triage workflows, and telemetry optimization without reliance on malware indicators.
+
+---
+
+## Roadmap
+
+* User-centric correlation logic
+* Risk-based scoring per host and account
+* Active response integration
+* Sigma rule equivalents
+* Splunk SPL parity
+
+---
+
+If you want next, I can:
+
+* Convert this into a **Detection Engineer interview walkthrough**
+* Add **Sigma + Splunk SPL equivalents**
+* Build a **unified Tier-3 SOC GitHub portfolio**
+* Rank your projects for recruiter scanning behavior
+
+Just tell me what to do next.
+>>>>>>> b000b3e469a7043cbe2f515291428ebb47ea7a5a
