@@ -398,8 +398,3 @@ New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" `
 
 ---
 
-## CV-Ready Summary
-
-Designed and engineered a Tier-3 behavioral detection framework using Wazuh and Sysmon, focused on insider threat identification, administrative tool abuse, and suspicious file system activity. Built MITRE ATT&CK–aligned detection and correlation rules emphasizing alert fidelity, risk accumulation, and investigation readiness. Demonstrated advanced detection engineering, SOC triage workflows, and telemetry optimization without reliance on malware indicators.
-
----
